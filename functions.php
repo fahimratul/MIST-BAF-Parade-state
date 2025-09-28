@@ -148,7 +148,7 @@ function getParadeData($pdo, $date) {
 // Get detailed absent officers with reasons
 function getDetailedAbsentOfficers($pdo, $date) {
     $stmt = $pdo->prepare("
-        SELECT o.name, o.rank, o.department, o.level, ps.status, ps.remarks,
+        SELECT o.name, o.rank, o.mess_location as mess_location, o.department, o.level, ps.status, ps.remarks,
                CASE 
                    WHEN ps.status = 'Leave' THEN 'lve'
                    WHEN ps.status = 'CMH' THEN 'CMH'
