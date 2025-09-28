@@ -170,136 +170,22 @@ ob_start();
     </style>
 </head>
 <body>
-    <div class="header">
-        PARADE STATE MIST STUDENT OFFRS (AIR FORCE) Dt: <?php echo $formatted_date; ?>
-    </div>
 
-    <table class="report-table">
-        <thead>
-            <tr>
-                <th rowspan="2" style="background-color: #be2424; color: white; border: 1px solid #000; padding: 3px; text-align: center; font-weight: bold; font-size: 9px;">Ser</th>
-                <th rowspan="2" style="background-color: #be2424; color: white; border: 1px solid #000; padding: 3px; text-align: center; font-weight: bold; font-size: 9px;">Dept</th>
-                <th rowspan="2" style="background-color: #be2424; color: white; border: 1px solid #000; padding: 3px; text-align: center; font-weight: bold; font-size: 9px;">Level</th>
-                <th colspan="3" style="background-color: #be2424; color: white; border: 1px solid #000; padding: 3px; text-align: center; font-weight: bold; font-size: 9px;">MIST Dhaka Mess</th>
-                <th colspan="3" style="background-color: #be2424; color: white; border: 1px solid #000; padding: 3px; text-align: center; font-weight: bold; font-size: 9px;">MIST Mirpur Mess</th>
-                <th colspan="3" style="background-color: #be2424; color: white; border: 1px solid #000; padding: 3px; text-align: center; font-weight: bold; font-size: 9px;">BAF Base AKR</th>
-                <th rowspan="2" style="background-color: #be2424; color: white; border: 1px solid #000; padding: 3px; text-align: center; font-weight: bold; font-size: 9px;">Level<br>wise<br>Str</th>
-                <th rowspan="2" style="background-color: #be2424; color: white; border: 1px solid #000; padding: 3px; text-align: center; font-weight: bold; font-size: 9px;">Total<br>Str</th>
-            </tr>
-            <tr>
-                <th style="background-color: #be2424; color: white; border: 1px solid #000; padding: 3px; text-align: center; font-weight: bold; font-size: 9px;">Str</th>
-                <th style="background-color: #be2424; color: white; border: 1px solid #000; padding: 3px; text-align: center; font-weight: bold; font-size: 9px;">On<br>Parade</th>
-                <th style="background-color: #be2424; color: white; border: 1px solid #000; padding: 3px; text-align: center; font-weight: bold; font-size: 9px;">Absent</th>
-                <th style="background-color: #be2424; color: white; border: 1px solid #000; padding: 3px; text-align: center; font-weight: bold; font-size: 9px;">Str</th>
-                <th style="background-color: #be2424; color: white; border: 1px solid #000; padding: 3px; text-align: center; font-weight: bold; font-size: 9px;">On<br>Parade</th>
-                <th style="background-color: #be2424; color: white; border: 1px solid #000; padding: 3px; text-align: center; font-weight: bold; font-size: 9px;">Absent</th>
-                <th style="background-color: #be2424; color: white; border: 1px solid #000; padding: 3px; text-align: center; font-weight: bold; font-size: 9px;">Str</th>
-                <th style="background-color: #be2424; color: white; border: 1px solid #000; padding: 3px; text-align: center; font-weight: bold; font-size: 9px;">On<br>Parade</th>
-                <th style="background-color: #be2424; color: white; border: 1px solid #000; padding: 3px; text-align: center; font-weight: bold; font-size: 9px;">Absent</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php 
-            $ser_no = 1;
-            $grand_totals = [
-                'MIST Dhaka Mess' => ['str' => 0, 'present' => 0, 'absent' => 0],
-                'MIST Mirpur Mess' => ['str' => 0, 'present' => 0, 'absent' => 0],
-                'BAF Base AKR' => ['str' => 0, 'present' => 0, 'absent' => 0]
-            ];
-            
-            foreach($parade_data['departments'] as $dept):
-                $dept_first_row = true;
-                $dept_total = 0;
-                
-                // Calculate department total
-                foreach($parade_data['levels'] as $level) {
-                    foreach($parade_data['mess_locations'] as $mess) {
-                        $dept_total += $parade_data['parade_data'][$dept][$level][$mess]['total'];
-                    }
-                }
-                
-                foreach($parade_data['levels'] as $level):
-                    $level_total = 0;
-                    $has_data = false;
-                    
-                    // Check if this level has any data for this department
-                    foreach($parade_data['mess_locations'] as $mess) {
-                        if($parade_data['parade_data'][$dept][$level][$mess]['total'] > 0) {
-                            $has_data = true;
-                            break;
-                        }
-                    }
-                    
-                    if($has_data):
-            ?>
-            <tr>
-                <?php if($dept_first_row): ?>
-                <td rowspan="3" style="background-color: #e0e0e0; font-weight: bold; border: 1px solid #000; padding: 3px; text-align: center;"><?php echo $ser_no; ?>.</td>
-                <td rowspan="3" style="background-color: #e0e0e0; font-weight: bold; border: 1px solid #000; padding: 3px; text-align: center;"><?php echo $dept; ?></td>
-                <?php $dept_first_row = false; endif; ?>
-                
-                <td style="border: 1px solid #000; padding: 3px; text-align: center;"><?php echo $level; ?></td>
-                
-                <?php foreach($parade_data['mess_locations'] as $mess): 
-                    $data = $parade_data['parade_data'][$dept][$level][$mess];
-                    $level_total += $data['total'];
-                    $grand_totals[$mess]['str'] += $data['total'];
-                    $grand_totals[$mess]['present'] += $data['present'];
-                    $grand_totals[$mess]['absent'] += $data['absent'];
-                ?>
-                <td style="border: 1px solid #000; padding: 3px; text-align: center;"><?php echo $data['total'] > 0 ? $data['total'] : '-'; ?></td>
-                <td style="border: 1px solid #000; padding: 3px; text-align: center;"><?php echo $data['present'] > 0 ? $data['present'] : '-'; ?></td>
-                <td style="border: 1px solid #000; padding: 3px; text-align: center;"><?php echo $data['absent'] > 0 ? $data['absent'] : '-'; ?></td>
-                <?php endforeach; ?>
-                
-                <td style="border: 1px solid #000; padding: 3px; text-align: center;"><?php echo $level_total; ?></td>
-                <?php if($level == 'II'): ?>
-                <td rowspan="3" class="dept-header">
-                    <?php 
-                    $dept_total = 0;
-                    foreach($parade_data['levels'] as $l) {
-                        foreach($parade_data['mess_locations'] as $m) {
-                            $dept_total += $parade_data['parade_data'][$dept][$l][$m]['total'];
-                        }
-                    }
-                    echo $dept_total;
-                    ?>
-                </td>
-                <?php endif; ?>
-            </tr>
-            <?php 
-                    endif;
-                endforeach;
-                $ser_no++;
-            endforeach; 
-            ?>
-            
-            <!-- Grand Total Row -->
-            <tr>
-                <td colspan="3" style="background-color: #f0f0f0; font-weight: bold; border: 1px solid #000; padding: 3px; text-align: center;">Grand Total :</td>
-                <td style="background-color: #f0f0f0; font-weight: bold; border: 1px solid #000; padding: 3px; text-align: center;"><?php echo $grand_totals['MIST Dhaka Mess']['str']; ?></td>
-                <td style="background-color: #f0f0f0; font-weight: bold; border: 1px solid #000; padding: 3px; text-align: center;"><?php echo $grand_totals['MIST Dhaka Mess']['present']; ?></td>
-                <td style="background-color: #f0f0f0; font-weight: bold; border: 1px solid #000; padding: 3px; text-align: center;"><?php echo $grand_totals['MIST Dhaka Mess']['absent']; ?></td>
-                <td style="background-color: #f0f0f0; font-weight: bold; border: 1px solid #000; padding: 3px; text-align: center;"><?php echo $grand_totals['MIST Mirpur Mess']['str']; ?></td>
-                <td style="background-color: #f0f0f0; font-weight: bold; border: 1px solid #000; padding: 3px; text-align: center;"><?php echo $grand_totals['MIST Mirpur Mess']['present']; ?></td>
-                <td style="background-color: #f0f0f0; font-weight: bold; border: 1px solid #000; padding: 3px; text-align: center;"><?php echo $grand_totals['MIST Mirpur Mess']['absent']; ?></td>
-                <td style="background-color: #f0f0f0; font-weight: bold; border: 1px solid #000; padding: 3px; text-align: center;"><?php echo $grand_totals['BAF Base AKR']['str']; ?></td>
-                <td style="background-color: #f0f0f0; font-weight: bold; border: 1px solid #000; padding: 3px; text-align: center;"><?php echo $grand_totals['BAF Base AKR']['present']; ?></td>
-                <td style="background-color: #f0f0f0; font-weight: bold; border: 1px solid #000; padding: 3px; text-align: center;"><?php echo $grand_totals['BAF Base AKR']['absent']; ?></td>
-                <td style="background-color: #f0f0f0; font-weight: bold; border: 1px solid #000; padding: 3px; text-align: center;"><?php echo $summary['total_strength']; ?></td>
-                <td style="background-color: #f0f0f0; font-weight: bold; border: 1px solid #000; padding: 3px; text-align: center;"><?php echo $summary['total_strength']; ?></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <!-- Summary Section -->
     <div class="summary-section no-break">
         <div class="summary-item">
-            <strong>1. Grand Total:</strong> MIST Dhaka Mess + MIST Mirpur Mess + BAF Base AKR = 
-            <?php echo $grand_totals['MIST Dhaka Mess']['str']; ?> + 
-            <?php echo $grand_totals['MIST Mirpur Mess']['str']; ?> + 
-            <?php echo $grand_totals['BAF Base AKR']['str']; ?> = 
-            <?php echo $summary['total_strength']; ?>
+            Assalamualaikum sir,<br><br>
+            BAF Students Parade state as on <?php echo sprintf('%02d', date('d', strtotime($report_date))) . '2100 ' . strtoupper(date('M y', strtotime($report_date))); ?> <br>
+            <br>
+
+            Total Str: 60<br>
+            Offrs: 48<br>
+            Cdts: 12<br>
+            On Parade: <?php echo $summary['total_on_parade']; ?><br>
+            Off Parade: <?php echo $summary['total_absent']; ?><br><br>
+            
+            Summary of Absent/Off parade:<br> 
+
+
         </div>
         
         <div class="summary-item">
@@ -346,12 +232,12 @@ ob_start();
                 <ol>
                     <?php 
                     $mirpur_count = 0;
-                    foreach($absent_officers as $officer):  // Show all absent officers
-                        if($officer['mess_location'] === 'MIST Mirpur Mess'):
-                            $mirpur_count++;
+                    foreach($absent_officers as $officer): 
+                        if($mirpur_count < 4): // Show first 4 absent officers as example
                     ?>
                     <li><?php echo $officer['rank'] . ' ' . $officer['name'] . '- ' . $officer['department'] . ', L' . str_replace(['I', 'II', 'III', 'IV'], ['1', '2', '3', '4'], $officer['level']) . ', ' . $officer['short_status']; ?></li>
                     <?php 
+                        $mirpur_count++;
                         endif;
                     endforeach; 
                     ?>

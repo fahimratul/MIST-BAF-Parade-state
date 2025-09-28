@@ -108,6 +108,11 @@ $trends = $stmt->fetchAll();
                         <i class="fas fa-file-pdf"></i> Today's Report
                     </a>
                 </div>
+                <div class="col-md-4 text-end">
+                    <a href="minstate.php?date=<?php echo date('Y-m-d'); ?>" class="btn btn-light" target="_blank">
+                        <i class="fas fa-file-pdf"></i> Today's Mini Report
+                    </a>
+                </div>
             </div>
         </div>
 
