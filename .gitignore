@@ -5,3 +5,4 @@ vendor/
 *.pdf
 *.json
 *.phar
+database_schema.sql
