@@ -113,28 +113,6 @@ REM Start XAMPP Control Panel
 echo Launching XAMPP Control Panel...
 start "" "%INSTALL_PATH%\xampp-control.exe"
 
-REM Wait a moment for XAMPP to start
-timeout /t 3 /nobreak >nul
-
-REM Try to start Apache and MySQL services automatically
-echo.
-echo Attempting to start Apache and MySQL services automatically...
-echo (This may take a few moments...)
-
-REM Use XAMPP shell commands to start services
-cd /d "%INSTALL_PATH%"
-if exist "apache_start.bat" (
-    echo Starting Apache...
-    call apache_start.bat >nul 2>&1
-)
-if exist "mysql_start.bat" (
-    echo Starting MySQL...
-    call mysql_start.bat >nul 2>&1
-)
-
-REM Alternative method using net start (if services are installed)
-net start Apache2.4 >nul 2>&1
-net start MySQL >nul 2>&1
 
 echo.
 echo XAMPP Control Panel has been started!
@@ -145,21 +123,6 @@ echo 2. Start MySQL service (if not already started)
 echo 3. Access your local server at: http://localhost
 echo.
 
-REM Ask if user wants to open localhost in browser
-echo Do you want to open http://localhost in your browser? (Y/N)
-set /p openbrowser="Enter your choice: "
-if /i "%openbrowser%"=="Y" (
-    echo Opening localhost in default browser...
-    start http://localhost
-)
-
-REM Ask if user wants to open htdocs folder
-echo.
-echo Do you want to open the htdocs folder? (Y/N)
-set /p openhtdocs="Enter your choice: "
-if /i "%openhtdocs%"=="Y" (
-    explorer "%INSTALL_PATH%\htdocs"
-)
 
 :cleanup
 REM Clean up downloaded installer
