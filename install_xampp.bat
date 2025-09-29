@@ -29,9 +29,8 @@ if exist "%INSTALL_PATH%\xampp-control.exe" (
     echo Do you want to reinstall? (Y/N)
     set /p choice="Enter your choice: "
     if /i not "%choice%"=="Y" (
-        echo Installation cancelled.
-        pause
-        exit /b 0
+        echo Skipping installation. Starting XAMPP Control Panel...
+        goto :start_xampp
     )
 )
 
@@ -92,36 +91,77 @@ if exist "%INSTALL_PATH%\xampp-control.exe" (
     echo.
     echo XAMPP has been installed to: %INSTALL_PATH%
     echo.
-    echo To start XAMPP:
-    echo 1. Navigate to %INSTALL_PATH%
-    echo 2. Run xampp-control.exe as administrator
-    echo 3. Start Apache and MySQL services
-    echo.
-    echo Your web files should be placed in: %INSTALL_PATH%\htdocs
-    echo.
-    
-    REM Ask if user wants to start XAMPP Control Panel
-    echo Do you want to start XAMPP Control Panel now? (Y/N)
-    set /p startxampp="Enter your choice: "
-    if /i "%startxampp%"=="Y" (
-        echo Starting XAMPP Control Panel...
-        start "" "%INSTALL_PATH%\xampp-control.exe"
-    )
-    
-    REM Ask if user wants to open htdocs folder
-    echo.
-    echo Do you want to open the htdocs folder? (Y/N)
-    set /p openhtdocs="Enter your choice: "
-    if /i "%openhtdocs%"=="Y" (
-        explorer "%INSTALL_PATH%\htdocs"
-    )
-    
+    goto :start_xampp
 ) else (
     echo.
     echo Installation may have failed or was cancelled.
     echo Please check if XAMPP was installed correctly.
+    goto :cleanup
 )
 
+:start_xampp
+echo.
+echo ========================================
+echo Starting XAMPP Control Panel...
+echo ========================================
+echo.
+echo XAMPP Location: %INSTALL_PATH%
+echo Your web files should be placed in: %INSTALL_PATH%\htdocs
+echo.
+
+REM Start XAMPP Control Panel
+echo Launching XAMPP Control Panel...
+start "" "%INSTALL_PATH%\xampp-control.exe"
+
+REM Wait a moment for XAMPP to start
+timeout /t 3 /nobreak >nul
+
+REM Try to start Apache and MySQL services automatically
+echo.
+echo Attempting to start Apache and MySQL services automatically...
+echo (This may take a few moments...)
+
+REM Use XAMPP shell commands to start services
+cd /d "%INSTALL_PATH%"
+if exist "apache_start.bat" (
+    echo Starting Apache...
+    call apache_start.bat >nul 2>&1
+)
+if exist "mysql_start.bat" (
+    echo Starting MySQL...
+    call mysql_start.bat >nul 2>&1
+)
+
+REM Alternative method using net start (if services are installed)
+net start Apache2.4 >nul 2>&1
+net start MySQL >nul 2>&1
+
+echo.
+echo XAMPP Control Panel has been started!
+echo.
+echo Please check the XAMPP Control Panel window to:
+echo 1. Start Apache service (if not already started)
+echo 2. Start MySQL service (if not already started)
+echo 3. Access your local server at: http://localhost
+echo.
+
+REM Ask if user wants to open localhost in browser
+echo Do you want to open http://localhost in your browser? (Y/N)
+set /p openbrowser="Enter your choice: "
+if /i "%openbrowser%"=="Y" (
+    echo Opening localhost in default browser...
+    start http://localhost
+)
+
+REM Ask if user wants to open htdocs folder
+echo.
+echo Do you want to open the htdocs folder? (Y/N)
+set /p openhtdocs="Enter your choice: "
+if /i "%openhtdocs%"=="Y" (
+    explorer "%INSTALL_PATH%\htdocs"
+)
+
+:cleanup
 REM Clean up downloaded installer
 echo.
 echo Cleaning up temporary files...
@@ -131,5 +171,12 @@ if exist "%DOWNLOAD_PATH%" (
 )
 
 echo.
-echo Script completed. Press any key to exit...
+echo ========================================
+echo Script completed successfully!
+echo ========================================
+echo XAMPP should now be running.
+echo Access your local server at: http://localhost
+echo Place your PHP files in: %INSTALL_PATH%\htdocs
+echo.
+echo Press any key to exit...
 pause >nul
