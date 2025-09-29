@@ -1,31 +1,15 @@
 <?php
-// generate_report.php - Fixed PDF Report Generator with TCPDF
+// generate_report.php - Updated PDF Report Generator with mPDF
 require_once 'config.php';
 require_once 'functions.php';
 
-// Check if TCPDF is installed
-$tcpdf_paths = [
-    'vendor/tecnickcom/tcpdf/tcpdf.php',  // Composer installation
-    'tcpdf/tcpdf.php',                    // Manual installation
-    'TCPDF/tcpdf.php'                     // Alternative path
-];
-
-$tcpdf_found = false;
-foreach ($tcpdf_paths as $path) {
-    if (file_exists($path)) {
-        require_once $path;
-        $tcpdf_found = true;
-        break;
-    }
-}
-
-if (!$tcpdf_found) {
-    // If TCPDF not found, show installation instructions
+// Check if mPDF is installed
+if (!file_exists('vendor/autoload.php')) {
     ?>
     <!DOCTYPE html>
     <html>
     <head>
-        <title>TCPDF Not Found</title>
+        <title>mPDF Not Found</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body class="bg-light">
@@ -33,19 +17,9 @@ if (!$tcpdf_found) {
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="alert alert-warning">
-                        <h4><i class="fas fa-exclamation-triangle"></i> TCPDF Library Not Found</h4>
-                        <p>The TCPDF library is required to generate PDF reports. Please install it using one of these methods:</p>
-                        
-                        <h5>Method 1: Quick Installation</h5>
-                        <p><a href="install_tcpdf.php" class="btn btn-primary">Run Auto-Installer</a></p>
-                        
-                        <h5>Method 2: Composer</h5>
-                        <pre><code>composer require tecnickcom/tcpdf</code></pre>
-                        
-                        <h5>Method 3: Manual Download</h5>
-                        <p>1. Download TCPDF from <a href="https://tcpdf.org/" target="_blank">https://tcpdf.org/</a></p>
-                        <p>2. Extract to your project folder as 'tcpdf/'</p>
-                        
+                        <h4><i class="fas fa-exclamation-triangle"></i> mPDF Library Not Found</h4>
+                        <p>The mPDF library is required to generate PDF reports.</p>
+                        <a href="install_composer.php" class="btn btn-primary">Run Auto-Installer</a>
                         <hr>
                         <p><strong>For now, here's the HTML version:</strong></p>
                         <a href="?date=<?php echo $_GET['date'] ?? date('Y-m-d'); ?>&format=html" class="btn btn-secondary">View HTML Report</a>
@@ -58,6 +32,8 @@ if (!$tcpdf_found) {
     <?php
     exit;
 }
+
+require_once 'vendor/autoload.php';
 
 // Get date from URL parameter or use current date
 $report_date = $_GET['date'] ?? date('Y-m-d');
@@ -84,115 +60,93 @@ ob_start();
         body {
             font-family: 'DejaVu Sans', Arial, sans-serif;
             margin: 0;
-            padding: 10px;
-            font-size: 9px;
-            line-height: 1.1;
+            padding: 15px;
+            font-size: 11px;
+            line-height: 1.2;
             color: #000;
         }
         
         .header {
             text-align: center;
             font-weight: bold;
-            font-size: 12px;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #000;
-            padding-bottom: 5px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
         }
         
         .report-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 10px;
-            font-size: 8px;
+            margin-bottom: 15px;
+            font-size: 10px;
         }
         
         .report-table th,
         .report-table td {
-            border: 0.5px solid #000;
-            padding: 2px;
+            border: 1px solid #000;
+            padding: 4px;
             text-align: center;
             vertical-align: middle;
-            font-size: 7px;
         }
         
         .report-table th {
-            background-color: #be2424 !important;
-            color: #ffffff !important;
+            background-color: #be2424;
+            color: #ffffff;
             font-weight: bold;
-            font-size: 7px;
+            font-size: 9px;
         }
         
-        .dept-cell {
+        .dept-header {
+            background-color: #c6d9f0;
+            font-weight: bold;
             text-align: left;
-            padding-left: 3px;
+            padding-left: 5px;
+        }
+        
+        .dept-total {
+            background-color: #c6d9f0;
             font-weight: bold;
         }
         
-        .level-cell {
-            text-align: center;
-            font-size: 7px;
-        }
-        
-        .number-cell {
-            text-align: center;
-            font-size: 7px;
-        }
-        
-        .total-row {
-            font-weight: bold;
-            background-color: #bebb24 !important;
-        }
-        
-        .dept-row-first {
-            background-color: #c6d9f0 !important;
-        }
-        
-        .level-total-cell {
-            background-color: #ffffcc !important;
+        .level-total {
+            background-color: #ffffcc;
             font-weight: bold;
         }
         
-        .dept-total-cell {
-            background-color: #c6d9f0 !important;
+        .grand-total {
             font-weight: bold;
+            background-color: #bebb24;
         }
         
         .summary-section {
-            margin-top: 8px;
-            font-size: 8px;
-            line-height: 1.2;
+            margin-top: 15px;
+            font-size: 10px;
         }
         
         .summary-item {
-            margin-bottom: 2px;
+            margin-bottom: 5px;
+            line-height: 1.4;
         }
         
         .absent-details {
-            margin-top: 5px;
-            margin-left: 10px;
+            margin-top: 10px;
+            margin-left: 15px;
         }
         
         .absent-details ol {
-            margin: 2px 0;
-            padding-left: 12px;
+            margin: 5px 0;
+            padding-left: 20px;
         }
         
         .section-title {
             font-weight: bold;
-            margin-top: 5px;
-            margin-bottom: 2px;
+            margin-top: 10px;
+            margin-bottom: 5px;
         }
         
         .text-left {
             text-align: left;
-        }
-        
-        .no-break {
-            page-break-inside: avoid;
-        }
-        
-        .dash {
-            color: #000;
         }
     </style>
 </head>
@@ -241,7 +195,6 @@ ob_start();
                 
                 // Collect all levels for this department that have data
                 foreach($parade_data['levels'] as $level) {
-                    $level_has_data = false;
                     $level_data = [
                         'level' => $level,
                         'dhaka' => $parade_data['parade_data'][$dept][$level]['MIST Dhaka Mess'] ?? ['total' => 0, 'present' => 0, 'absent' => 0],
@@ -251,7 +204,6 @@ ob_start();
                     
                     // Check if this level has any data
                     if ($level_data['dhaka']['total'] > 0 || $level_data['mirpur']['total'] > 0 || $level_data['akr']['total'] > 0) {
-                        $level_has_data = true;
                         $level_data['level_total'] = $level_data['dhaka']['total'] + $level_data['mirpur']['total'] + $level_data['akr']['total'];
                         $dept_total_str += $level_data['level_total'];
                         
@@ -277,39 +229,35 @@ ob_start();
                     $first_row = true;
                     foreach($dept_levels as $level_data):
             ?>
-            <tr <?php echo $first_row ? 'class="dept-row-first"' : ''; ?>>
+            <tr>
                 <?php if($first_row): ?>
-                <td rowspan="<?php echo count($dept_levels); ?>" class="number-cell dept-total-cell"><?php echo $ser_no; ?>.</td>
-                <td rowspan="<?php echo count($dept_levels); ?>" class="dept-cell dept-total-cell"><?php echo $dept; ?></td>
+                <td rowspan="<?php echo count($dept_levels); ?>" class="dept-header"><?php echo $ser_no; ?>.</td>
+                <td rowspan="<?php echo count($dept_levels); ?>" class="dept-header"><?php echo $dept; ?></td>
                 <?php $first_row = false; endif; ?>
                 
-                <td class="level-cell"><?php echo $level_data['level']; ?></td>
+                <td><?php echo $level_data['level']; ?></td>
                 
                 <!-- MIST Dhaka Mess -->
-                <td class="number-cell"><?php echo $level_data['dhaka']['total'] > 0 ? $level_data['dhaka']['total'] : '-'; ?></td>
-                <td class="number-cell"><?php echo $level_data['dhaka']['present'] > 0 ? $level_data['dhaka']['present'] : '-'; ?></td>
-                <td class="number-cell"><?php echo $level_data['dhaka']['absent'] > 0 ? $level_data['dhaka']['absent'] : '-'; ?></td>
+                <td><?php echo $level_data['dhaka']['total'] > 0 ? $level_data['dhaka']['total'] : '-'; ?></td>
+                <td><?php echo $level_data['dhaka']['present'] > 0 ? $level_data['dhaka']['present'] : '-'; ?></td>
+                <td><?php echo $level_data['dhaka']['absent'] > 0 ? $level_data['dhaka']['absent'] : '-'; ?></td>
                 
                 <!-- MIST Mirpur Mess -->
-                <td class="number-cell"><?php echo $level_data['mirpur']['total'] > 0 ? $level_data['mirpur']['total'] : '-'; ?></td>
-                <td class="number-cell"><?php echo $level_data['mirpur']['present'] > 0 ? $level_data['mirpur']['present'] : '-'; ?></td>
-                <td class="number-cell"><?php echo $level_data['mirpur']['absent'] > 0 ? $level_data['mirpur']['absent'] : 
-                    ($level_data['mirpur']['absent'] > 0 && isset($absent_officers[0]) ? 
-                        $level_data['mirpur']['absent'] . ' x ' . $absent_officers[0]['short_status'] : 
-                        ($level_data['mirpur']['absent'] > 0 ? $level_data['mirpur']['absent'] : '-')
-                    ); ?></td>
+                <td><?php echo $level_data['mirpur']['total'] > 0 ? $level_data['mirpur']['total'] : '-'; ?></td>
+                <td><?php echo $level_data['mirpur']['present'] > 0 ? $level_data['mirpur']['present'] : '-'; ?></td>
+                <td><?php echo $level_data['mirpur']['absent'] > 0 ? $level_data['mirpur']['absent'] : '-'; ?></td>
                 
                 <!-- BAF Base AKR -->
-                <td class="number-cell"><?php echo $level_data['akr']['total'] > 0 ? $level_data['akr']['total'] : '-'; ?></td>
-                <td class="number-cell"><?php echo $level_data['akr']['present'] > 0 ? $level_data['akr']['present'] : '-'; ?></td>
-                <td class="number-cell"><?php echo $level_data['akr']['absent'] > 0 ? $level_data['akr']['absent'] : '-'; ?></td>
+                <td><?php echo $level_data['akr']['total'] > 0 ? $level_data['akr']['total'] : '-'; ?></td>
+                <td><?php echo $level_data['akr']['present'] > 0 ? $level_data['akr']['present'] : '-'; ?></td>
+                <td><?php echo $level_data['akr']['absent'] > 0 ? $level_data['akr']['absent'] : '-'; ?></td>
                 
                 <!-- Level wise total -->
-                <td class="number-cell level-total-cell"><?php echo $level_data['level_total']; ?></td>
+                <td class="level-total"><?php echo $level_data['level_total']; ?></td>
                 
                 <!-- Department total (only on first row) -->
                 <?php if($level_data === $dept_levels[0]): ?>
-                <td rowspan="<?php echo count($dept_levels); ?>" class="number-cell dept-total-cell"><?php echo $dept_total_str; ?></td>
+                <td rowspan="<?php echo count($dept_levels); ?>" class="dept-total"><?php echo $dept_total_str; ?></td>
                 <?php endif; ?>
             </tr>
             <?php 
@@ -320,48 +268,46 @@ ob_start();
             ?>
             
             <!-- Grand Total Row -->
-            <tr class="total-row">
-                <td colspan="3" style="background-color: #ffff99 !important; font-weight: bold;"><strong>Grand Total :</strong></td>
-                <td class="number-cell" style="background-color: #ffff99 !important; font-weight: bold;"><strong><?php echo $grand_totals['dhaka']['str']; ?></strong></td>
-                <td class="number-cell" style="background-color: #ffff99 !important; font-weight: bold;"><strong><?php echo $grand_totals['dhaka']['present']; ?></strong></td>
-                <td class="number-cell" style="background-color: #ffff99 !important; font-weight: bold;"><strong><?php echo $grand_totals['dhaka']['absent']; ?></strong></td>
-                <td class="number-cell" style="background-color: #ffff99 !important; font-weight: bold;"><strong><?php echo $grand_totals['mirpur']['str']; ?></strong></td>
-                <td class="number-cell" style="background-color: #ffff99 !important; font-weight: bold;"><strong><?php echo $grand_totals['mirpur']['present']; ?></strong></td>
-                <td class="number-cell" style="background-color: #ffff99 !important; font-weight: bold;"><strong><?php echo $grand_totals['mirpur']['absent']; ?></strong></td>
-                <td class="number-cell" style="background-color: #ffff99 !important; font-weight: bold;"><strong><?php echo $grand_totals['akr']['str']; ?></strong></td>
-                <td class="number-cell" style="background-color: #ffff99 !important; font-weight: bold;"><strong><?php echo $grand_totals['akr']['present']; ?></strong></td>
-                <td class="number-cell" style="background-color: #ffff99 !important; font-weight: bold;"><strong><?php echo $grand_totals['akr']['absent']; ?></strong></td>
-                <td class="number-cell" style="background-color: #ffff99 !important; font-weight: bold;"><strong><?php echo $summary['total_strength']; ?></strong></td>
-                <td class="number-cell" style="background-color: #ffff99 !important; font-weight: bold;"><strong><?php echo $summary['total_strength']; ?></strong></td>
+            <tr class="grand-total">
+                <td colspan="3"><strong>Grand Total :</strong></td>
+                <td><strong><?php echo $grand_totals['dhaka']['str']; ?></strong></td>
+                <td><strong><?php echo $grand_totals['dhaka']['present']; ?></strong></td>
+                <td><strong><?php echo $grand_totals['dhaka']['absent']; ?></strong></td>
+                <td><strong><?php echo $grand_totals['mirpur']['str']; ?></strong></td>
+                <td><strong><?php echo $grand_totals['mirpur']['present']; ?></strong></td>
+                <td><strong><?php echo $grand_totals['mirpur']['absent']; ?></strong></td>
+                <td><strong><?php echo $grand_totals['akr']['str']; ?></strong></td>
+                <td><strong><?php echo $grand_totals['akr']['present']; ?></strong></td>
+                <td><strong><?php echo $grand_totals['akr']['absent']; ?></strong></td>
+                <td><strong><?php echo $summary['total_strength']; ?></strong></td>
+                <td><strong><?php echo $summary['total_strength']; ?></strong></td>
             </tr>
         </tbody>
     </table>
 
     <!-- Summary Section -->
-    <div class="summary-section no-break">
+    <div class="summary-section">
         <div class="summary-item">
             <strong>1. Grand Total:</strong> Dhaka Mess + MIST Mess + BAF Base AKR = 
-            <?php echo $grand_totals['dhaka']['str']; ?>+
-            <?php echo $grand_totals['mirpur']['str']; ?>+
-            <?php echo $grand_totals['akr']['str']; ?>=
+            <?php echo $grand_totals['dhaka']['str']; ?> + 
+            <?php echo $grand_totals['mirpur']['str']; ?> + 
+            <?php echo $grand_totals['akr']['str']; ?> = 
             <?php echo $summary['total_strength']; ?>
         </div>
         
         <div class="summary-item">
             <strong>2. Level wise Total Offrs:</strong> 
             <?php 
-            // Fixed level numbering - II=Level-2, III=Level-3, IV=Level-4
             $level_mapping = ['I' => '1', 'II' => '2', 'III' => '3', 'IV' => '4'];
             $level_parts = [];
             
-            // Show in proper order and format
-            foreach(['II', 'III', 'IV'] as $level) {
+            foreach(['I', 'II', 'III', 'IV'] as $level) {
                 $count = $summary['level_totals'][$level] ?? 0;
                 $level_num = $level_mapping[$level];
-                if($level_num == '1') {
-                    $level_parts[] = 'Level-' . $level_num . '= Nil';
-                } else {
+                if($count > 0) {
                     $level_parts[] = 'Level-' . $level_num . '=' . $count;
+                } else {
+                    $level_parts[] = 'Level-' . $level_num . '= Nil';
                 }
             }
             echo implode(', ', $level_parts);
@@ -446,16 +392,16 @@ ob_start();
                 endforeach; 
                 ?>
             <?php else: ?>
-                <div><strong>a. Leave:</strong>04</div>
-                <div><strong>b. CMH:</strong>01</div>
+                <div><strong>a. Leave:</strong></div>
+                <div><strong>b. CMH:</strong></div>
                 <div><strong>c. Sick Leave:</strong></div>
-                <div><strong>d. SIQ:</strong>01</div>
+                <div><strong>d. SIQ:</strong></div>
                 <div><strong>e. Isolation:</strong></div>
             <?php endif; ?>
         </div>
         
         <div class="section-title">8. Maj Changes/ Note:</div>
-        <div style="height: 15px;"></div> <!-- Space for manual notes -->
+        <div style="height: 20px;"></div>
     </div>
 </body>
 </html>
@@ -464,52 +410,43 @@ ob_start();
 $html = ob_get_clean();
 
 // Decide output format
-if ($format === 'html' || !$tcpdf_found) {
-    // Output as HTML (for preview or if TCPDF not available)
+if ($format === 'html') {
+    // Output as HTML (for preview)
     header('Content-Type: text/html; charset=utf-8');
     echo $html;
 } else {
-    // Generate PDF using TCPDF
+    // Generate PDF using mPDF
     try {
         // Create new PDF document in landscape orientation
-        $pdf = new TCPDF('L', 'mm', 'A4', true, 'UTF-8', false);
+        $mpdf = new \Mpdf\Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4-L',  // A4 Landscape
+            'orientation' => 'L',
+            'margin_left' => 8,
+            'margin_right' => 8,
+            'margin_top' => 8,
+            'margin_bottom' => 8,
+            'margin_header' => 0,
+            'margin_footer' => 0,
+            'default_font_size' => 10,
+            'default_font' => 'dejavusans'
+        ]);
         
         // Set document information
-        $pdf->SetCreator('BAF Parade System');
-        $pdf->SetAuthor('Bangladesh Air Force');
-        $pdf->SetTitle("Parade State Report - {$formatted_date}");
-        $pdf->SetSubject('BAF MIST Student Officers Parade State');
-        $pdf->SetKeywords('BAF, Parade, Report, MIST, Officers');
+        $mpdf->SetTitle("BAF Parade State Report - {$formatted_date}");
+        $mpdf->SetAuthor('Bangladesh Air Force');
+        $mpdf->SetCreator('BAF Parade System');
         
-        // Remove header and footer
-        $pdf->SetPrintHeader(false);
-        $pdf->SetPrintFooter(false);
-        
-        // CRITICAL: Enable color mode using correct TCPDF methods
-        $pdf->SetDrawColor(0, 0, 0);        // Black borders
-        $pdf->SetFillColor(255, 255, 255);  // White background
-        $pdf->SetTextColor(0, 0, 0);        // Black text
-        
-        // Set margins (smaller for more content)
-        $pdf->SetMargins(8, 8, 8);
-        $pdf->SetAutoPageBreak(TRUE, 10);
-        
-        // Set font
-        $pdf->SetFont('dejavusans', '', 8);
-        
-        // Add a page
-        $pdf->AddPage();
-        
-        // IMPORTANT: Write HTML with color support enabled
-        $pdf->writeHTML($html, true, false, true, false, '');
+        // Write HTML content
+        $mpdf->WriteHTML($html);
         
         // Set output filename
         $filename = "BAF_Parade_Report_{$formatted_date}.pdf";
         
-        // Output PDF
-        $pdf->Output($filename, 'I'); // 'I' for inline display, 'D' for download
+        // Output PDF (I = inline display in browser, D = download)
+        $mpdf->Output($filename, 'I');
         
-    } catch (Exception $e) {
+    } catch (\Mpdf\MpdfException $e) {
         // If PDF generation fails, output HTML with error message
         header('Content-Type: text/html; charset=utf-8');
         echo '<div style="background: #ffebee; padding: 20px; margin: 20px; border: 1px solid #f44336; border-radius: 5px;">';
