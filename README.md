@@ -14,7 +14,7 @@ A comprehensive web-based system for managing Bangladesh Air Force MIST Student 
   - [Step 2: Download Project Files](#step-2-download-project-files)
   - [Step 3: Setup Database](#step-3-setup-database)
   - [Step 4: Configure the System](#step-4-configure-the-system)
-  - [Step 5: Install TCPDF for PDF Generation](#step-5-install-tcpdf-for-pdf-generation)
+  - [Step 5: Install mPDF for PDF Generation](#step-5-install-mPDF-for-pdf-generation)
   - [Step 6: Test the Installation](#step-6-test-the-installation)
 - [Usage Guide](#usage-guide)
 - [Troubleshooting](#troubleshooting)
@@ -26,7 +26,7 @@ A comprehensive web-based system for managing Bangladesh Air Force MIST Student 
 ## 🖥️ System Requirements
 
 ### Minimum Requirements:
-- **Operating System:** Windows 7/8/10/11, macOS 10.13+, or Linux
+- **Operating System:** Windows 7/8/10/11
 - **RAM:** 4GB minimum (8GB recommended)
 - **Storage:** 500MB free space
 - **Browser:** Chrome, Firefox, Edge, or Safari (latest versions)
@@ -39,24 +39,25 @@ A comprehensive web-based system for managing Bangladesh Air Force MIST Student 
 ---
 
 ## 🚀 Installation Steps
+### Step 1: Download the zip file
 
-### Step 1: Install XAMPP
+1. **Download the ZIP File**
+- Go to the [MIST BAF Parade State GitHub repository](https://github.com/fahimratul/MIST-BAF-Parade-state).
+- Click the green **Code** button.
+- Select **Download ZIP**.
 
-#### For Windows:
+ 2. Unzip the Downloaded File
+- Locate the downloaded ZIP file (usually in your Downloads folder).
+- Right-click the ZIP file and select **Extract All**.
+- Choose a destination folder and click **Extract**.
 
-1. **Download XAMPP:**
-   - Visit: [https://www.apachefriends.org/](https://www.apachefriends.org/)
-   - Download XAMPP for Windows (PHP 8.0 or higher recommended)
-   - File size: ~150MB
+### Step 2: Install XAMPP
 
 2. **Install XAMPP:**
    ```
-   - Run the downloaded installer (xampp-windows-x64-8.x.x-installer.exe)
-   - Choose installation directory (default: C:\xampp)
-   - Select components: Apache, MySQL, PHP, phpMyAdmin
-   - Click "Next" through the installation wizard
-   - Uncheck "Learn more about Bitnami" option
-   - Click "Finish" when installation completes
+   - Run the XAMMP-Installer.exe 
+   - It will automatacally download your XAMPP app and run it
+   
    ```
 
 3. **Start XAMPP:**
@@ -72,261 +73,11 @@ A comprehensive web-based system for managing Bangladesh Air Force MIST Student 
    - Visit: `http://localhost`
    - You should see the XAMPP welcome page
 
-#### For macOS:
-
-1. **Download XAMPP:**
-   - Visit: [https://www.apachefriends.org/](https://www.apachefriends.org/)
-   - Download XAMPP for macOS
-
-2. **Install XAMPP:**
-   ```bash
-   # Open the downloaded DMG file
-   # Drag XAMPP icon to Applications folder
-   # Open XAMPP from Applications
-   ```
-
-3. **Start Services:**
-   - Open XAMPP Manager
-   - Click "Start" for Apache and MySQL
-   - Enter your macOS password if prompted
-
-#### For Linux:
-
-```bash
-# Download XAMPP
-wget https://www.apachefriends.org/xampp-files/8.2.12/xampp-linux-x64-8.2.12-0-installer.run
-
-# Make it executable
-chmod +x xampp-linux-x64-8.2.12-0-installer.run
-
-# Install (requires sudo)
-sudo ./xampp-linux-x64-8.2.12-0-installer.run
-
-# Start XAMPP
-sudo /opt/lampp/lampp start
-```
-
----
-
-### Step 2: Download Project Files
-
-#### Method 1: Download ZIP from GitHub
-
-1. **Download the Project:**
-   - Go to the GitHub repository
-   - Click the green **"Code"** button
-   - Select **"Download ZIP"**
-   - Save the file (e.g., `baf-parade-system-main.zip`)
-
-2. **Extract Files:**
-
-   **Windows:**
-   ```
-   - Right-click the downloaded ZIP file
-   - Select "Extract All..."
-   - Choose destination: C:\xampp\htdocs\
-   - The folder will be extracted (e.g., baf-parade-system-main)
-   - Rename folder to: baf_parade_system
-   ```
-
-   **macOS/Linux:**
-   ```bash
-   # Navigate to downloads
-   cd ~/Downloads
-   
-   # Extract ZIP
-   unzip baf-parade-system-main.zip
-   
-   # Move to XAMPP htdocs
-   # For macOS:
-   sudo mv baf-parade-system-main /Applications/XAMPP/htdocs/baf_parade_system
-   
-   # For Linux:
-   sudo mv baf-parade-system-main /opt/lampp/htdocs/baf_parade_system
-   
-   # Set permissions
-   sudo chmod -R 755 /path/to/htdocs/baf_parade_system
-   ```
-
-#### Method 2: Clone with Git (Alternative)
-
-```bash
-# If you have Git installed
-cd C:\xampp\htdocs  # Windows
-cd /Applications/XAMPP/htdocs  # macOS
-cd /opt/lampp/htdocs  # Linux
-
-# Clone repository
-git clone https://github.com/yourusername/baf-parade-system.git baf_parade_system
-```
-
-3. **Verify File Structure:**
-   ```
-   C:\xampp\htdocs\baf_parade_system\  (Windows)
-   /Applications/XAMPP/htdocs/baf_parade_system/  (macOS)
-   /opt/lampp/htdocs/baf_parade_system/  (Linux)
-   
-   Should contain:
-   ├── index.php
-   ├── config.php
-   ├── functions.php
-   ├── officers.php
-   ├── add_officer.php
-   ├── parade.php
-   ├── reports.php
-   ├── generate_report.php
-   ├── install_tcpdf.php
-   ├── composer.json
-   ├── database_schema.sql
-   └── README.md
-   ```
-
----
-
 ### Step 3: Setup Database
-
-#### Option 1: Using phpMyAdmin (Recommended for Beginners)
-
-1. **Open phpMyAdmin:**
-   - Open your browser
-   - Visit: `http://localhost/phpmyadmin`
-   - You should see the phpMyAdmin interface
-
-2. **Create Database:**
-   ```
-   - Click on "New" in the left sidebar
-   - Database name: baf_parade_system
-   - Collation: utf8mb4_general_ci
-   - Click "Create"
-   ```
-
-3. **Import Database Schema:**
-   ```
-   - Select the "baf_parade_system" database from left sidebar
-   - Click on "Import" tab at the top
-   - Click "Choose File" button
-   - Navigate to: C:\xampp\htdocs\baf_parade_system\database_schema.sql
-   - Select the file and click "Open"
-   - Scroll down and click "Go" button
-   - You should see "Import has been successfully finished"
-   ```
-
-4. **Verify Database Tables:**
-   ```
-   - Click on "baf_parade_system" database
-   - You should see 3 tables:
-     ✓ officers
-     ✓ parade_states
-     ✓ reports
-   - Click on "officers" to see sample data
-   ```
-
-#### Option 2: Using MySQL Command Line
-
-```bash
-# Windows (open Command Prompt as Administrator)
-cd C:\xampp\mysql\bin
-mysql -u root -p
-
-# macOS/Linux (open Terminal)
-/Applications/XAMPP/bin/mysql -u root -p  # macOS
-/opt/lampp/bin/mysql -u root -p  # Linux
-
-# Then run these commands:
-CREATE DATABASE baf_parade_system CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE baf_parade_system;
-SOURCE C:/xampp/htdocs/baf_parade_system/database_schema.sql;  # Windows
-SOURCE /Applications/XAMPP/htdocs/baf_parade_system/database_schema.sql;  # macOS
-SOURCE /opt/lampp/htdocs/baf_parade_system/database_schema.sql;  # Linux
-
-# Verify tables
-SHOW TABLES;
-SELECT COUNT(*) FROM officers;
-
-# Exit MySQL
-EXIT;
-```
-
----
 
 ### Step 4: Configure the System
 
-1. **Edit Database Configuration:**
 
-   **Open the config.php file:**
-   - Navigate to: `C:\xampp\htdocs\baf_parade_system\config.php`
-   - Open with Notepad, VS Code, or any text editor
-
-   **Default configuration:**
-   ```php
-   <?php
-   $host = 'localhost';
-   $dbname = 'baf_parade_system';
-   $username = 'root';
-   $password = '';  // Leave empty for default XAMPP
-   ```
-
-   **If you set a MySQL password:**
-   ```php
-   $password = 'your_password_here';
-   ```
-
-2. **Save the file** (Ctrl+S or Cmd+S)
-
----
-
-### Step 5: Install TCPDF for PDF Generation
-
-PDF generation requires the TCPDF library. Choose one method:
-
-#### Method 1: Auto-Installer (Easiest)
-
-1. **Run the Auto-Installer:**
-   - Open browser
-   - Visit: `http://localhost/baf_parade_system/install_tcpdf.php`
-   - Click the install button
-   - Wait for installation to complete (30-60 seconds)
-   - You'll see: "✅ TCPDF installation completed successfully!"
-
-#### Method 2: Manual Installation
-
-1. **Download TCPDF:**
-   - Visit: [https://github.com/tecnickcom/TCPDF/archive/refs/heads/main.zip](https://github.com/tecnickcom/TCPDF/archive/refs/heads/main.zip)
-   - Download the ZIP file
-
-2. **Extract and Install:**
-   ```
-   Windows:
-   - Extract the downloaded ZIP
-   - Rename folder from "TCPDF-main" to "tcpdf"
-   - Move to: C:\xampp\htdocs\baf_parade_system\tcpdf\
-   
-   macOS/Linux:
-   unzip TCPDF-main.zip
-   mv TCPDF-main tcpdf
-   mv tcpdf /path/to/htdocs/baf_parade_system/
-   ```
-
-#### Method 3: Composer (For Advanced Users)
-
-```bash
-# Install Composer first (if not installed)
-# Visit: https://getcomposer.org/download/
-
-# Navigate to project directory
-cd C:\xampp\htdocs\baf_parade_system  # Windows
-cd /Applications/XAMPP/htdocs/baf_parade_system  # macOS
-cd /opt/lampp/htdocs/baf_parade_system  # Linux
-
-# Install dependencies
-composer install
-```
-
-3. **Verify TCPDF Installation:**
-   - Check if folder exists: `baf_parade_system/tcpdf/tcpdf.php`
-   - OR: `baf_parade_system/vendor/tecnickcom/tcpdf/tcpdf.php`
-
----
 
 ### Step 6: Test the Installation
 
@@ -334,7 +85,8 @@ composer install
 
 Open your browser and visit:
 ```
-http://localhost/baf_parade_system
+http://localhost/paradestate/
+
 ```
 
 You should see the **Dashboard** with:
@@ -347,19 +99,19 @@ You should see the **Dashboard** with:
 
 **a) Dashboard Test:**
 ```
-URL: http://localhost/baf_parade_system/index.php
+URL: http://localhost/paradestate/index.php
 Expected: Statistics, department breakdown, recent activity
 ```
 
 **b) Officers Management:**
 ```
-URL: http://localhost/baf_parade_system/officers.php
+URL: http://localhost/paradestate/officers.php
 Expected: List of sample officers with search/filter options
 ```
 
 **c) Add New Officer:**
 ```
-URL: http://localhost/baf_parade_system/add_officer.php
+URL: http://localhost/paradestate/add_officer.php
 Try adding:
 - Name: Test Officer
 - Rank: Flg Offr
@@ -373,7 +125,7 @@ Expected: Success message
 
 **d) Parade State Management:**
 ```
-URL: http://localhost/baf_parade_system/parade.php
+URL: http://localhost/paradestate/parade.php
 Expected: List of all officers with attendance status dropdowns
 Try:
 - Mark a few officers as "Leave" or "CMH"
@@ -384,14 +136,14 @@ Expected: Success message
 
 **e) Generate PDF Report:**
 ```
-URL: http://localhost/baf_parade_system/generate_report.php?date=2025-01-15
+URL: http://localhost/paradestate/generate_report.php?date=2025-01-15
 Expected: PDF report opens in browser
 Should show: Complete parade state report in BAF format
 ```
 
 **f) Reports Dashboard:**
 ```
-URL: http://localhost/baf_parade_system/reports.php
+URL: http://localhost/paradestate/reports.php
 Expected: List of generated reports with statistics
 ```
 
@@ -475,45 +227,38 @@ Expected: List of generated reports with statistics
 ```
 1. Verify XAMPP Apache is running (green in Control Panel)
 2. Check folder location:
-   - Should be: C:\xampp\htdocs\baf_parade_system\
+   - Should be: C:\xampp\htdocs\paradestate\
    - NOT: C:\xampp\htdocs\baf-parade-system-main\
-3. Use correct URL: http://localhost/baf_parade_system (not .com)
+3. Use correct URL: http://localhost/paradestate (not .com)
 ```
 
 #### Issue 3: "Failed to load PDF document"
 
 **Solution:**
 ```
-1. Install TCPDF:
-   - Visit: http://localhost/baf_parade_system/install_tcpdf.php
+1. Install mPDF:
+   - Visit: http://localhost/paradestate/install_composer.php
    - Click install button
    - Wait for completion
 
 2. Verify installation:
-   - Check folder: baf_parade_system/tcpdf/
-   - Should contain: tcpdf.php file
+   - Check folder: paradestate/vendor/
+   - Should contain: mPDF.php file
 
-3. Test PDF generation:
-   - Visit: http://localhost/baf_parade_system/generate_report.php?date=2025-01-15
 ```
+
 
 #### Issue 4: "Access Denied" or Permission Issues
 
 **Windows:**
 ```
-- Right-click folder: C:\xampp\htdocs\baf_parade_system
+- Right-click folder: C:\xampp\htdocs\
 - Properties → Security tab
 - Make sure your user has "Full control"
 ```
 
-**macOS/Linux:**
-```bash
-sudo chmod -R 755 /path/to/htdocs/baf_parade_system
-sudo chown -R your_username:your_group /path/to/htdocs/baf_parade_system
-```
-
 #### Issue 5: "Blank white page"
-
+```
 **Solution:**
 ```
 1. Enable error reporting:
@@ -620,7 +365,7 @@ sudo chown -R your_username:your_group /path/to/htdocs/baf_parade_system
 1. **Backup Current Installation:**
    ```
    - Export database via phpMyAdmin
-   - Copy baf_parade_system folder to safe location
+   - Copy paradestate folder to safe location
    ```
 
 2. **Download New Version:**
@@ -633,7 +378,7 @@ sudo chown -R your_username:your_group /path/to/htdocs/baf_parade_system
    ```
    - Keep your config.php (don't overwrite)
    - Replace all other PHP files
-   - Keep tcpdf/ folder if already installed
+   - Keep vendor/ folder if already installed
    ```
 
 4. **Update Database:**
@@ -660,7 +405,7 @@ $password = '';                // MySQL password (default: empty)
   - PDO
   - PDO_MySQL
   - mbstring
-  - zip (for TCPDF installation)
+  - zip (for mPDF installation)
 
 ---
 
@@ -690,7 +435,7 @@ This system is developed for Bangladesh Air Force use. All rights reserved.
 
 - Bangladesh Air Force
 - Military Institute of Science & Technology (MIST)
-- TCPDF Library: [https://tcpdf.org/](https://tcpdf.org/)
+- mPDF Library: [https://mPDF.org/](https://mPDF.org/)
 - Bootstrap Framework: [https://getbootstrap.com/](https://getbootstrap.com/)
 
 ---
@@ -699,13 +444,13 @@ This system is developed for Bangladesh Air Force use. All rights reserved.
 
 ### Essential URLs:
 ```
-Dashboard:          http://localhost/baf_parade_system/
-Officers:           http://localhost/baf_parade_system/officers.php
-Add Officer:        http://localhost/baf_parade_system/add_officer.php
-Parade State:       http://localhost/baf_parade_system/parade.php
-Reports:            http://localhost/baf_parade_system/reports.php
-Generate PDF:       http://localhost/baf_parade_system/generate_report.php
-Install TCPDF:      http://localhost/baf_parade_system/install_tcpdf.php
+Dashboard:          http://localhost/paradestate/
+Officers:           http://localhost/paradestate/officers.php
+Add Officer:        http://localhost/paradestate/add_officer.php
+Parade State:       http://localhost/paradestate/parade.php
+Reports:            http://localhost/paradestate/reports.php
+Generate PDF:       http://localhost/paradestate/generate_report.php
+Install mPDF:      http://localhost/paradestate/install_composer.php
 phpMyAdmin:         http://localhost/phpmyadmin
 ```
 
@@ -721,19 +466,10 @@ Config Files:       Click "Config" buttons
 ### File Locations:
 ```
 Windows:
-- Project: C:\xampp\htdocs\baf_parade_system\
+- Project: C:\xampp\htdocs\paradestate\
 - Config: C:\xampp\php\php.ini
 - Logs: C:\xampp\apache\logs\
 
-macOS:
-- Project: /Applications/XAMPP/htdocs/baf_parade_system/
-- Config: /Applications/XAMPP/etc/php.ini
-- Logs: /Applications/XAMPP/logs/
-
-Linux:
-- Project: /opt/lampp/htdocs/baf_parade_system/
-- Config: /opt/lampp/etc/php.ini
-- Logs: /opt/lampp/logs/
 ```
 
 ---
