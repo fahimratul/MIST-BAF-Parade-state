@@ -139,15 +139,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <label for="rank" class="form-label">
                                             <i class="fas fa-medal"></i> Rank <span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" 
-                                               class="form-control" 
-                                               id="rank" 
-                                               name="rank" 
-                                               value="<?php echo htmlspecialchars($_POST['rank'] ?? ''); ?>"
-                                               placeholder="e.g., Flg Offr"
-                                               required>
+                                        <select class="form-select" id="rank" name="rank" required>
+                                            <option value="">Select Rank</option>
+                                            <option value="Offr Cdt" <?php echo ($_POST['rank'] ?? '') == 'Offr Cdt' ? 'selected' : ''; ?>>Offr Cdt</option>
+                                            <option value="Flg Offr" <?php echo ($_POST['rank'] ?? '') == 'Flg Offr' ? 'selected' : ''; ?>>Flg Offr</option>
+                                            <option value="Flt Lt" <?php echo ($_POST['rank'] ?? '') == 'Flt Lt' ? 'selected' : ''; ?>>Flt Lt</option>
+                                            <option value="Sqn Ldr" <?php echo ($_POST['rank'] ?? '') == 'Sqn Ldr' ? 'selected' : ''; ?>>Sqn Ldr</option>
+                                        </select>
                                         <div class="invalid-feedback">
-                                            Please provide a valid rank.
+                                            Please select a rank.
                                         </div>
                                     </div>
                                 </div>

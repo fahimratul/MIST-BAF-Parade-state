@@ -147,6 +147,9 @@ function getParadeData($pdo, $date) {
 
 // Get detailed absent officers with reasons
 function getDetailedAbsentOfficers($pdo, $date) {
+    
+    
+    
     $stmt = $pdo->prepare("
         SELECT o.name, o.rank, o.mess_location as mess_location, o.department, o.level, ps.status, ps.remarks,
                CASE 
@@ -162,6 +165,7 @@ function getDetailedAbsentOfficers($pdo, $date) {
         WHERE ps.parade_date = ? AND ps.status != 'Present'
         ORDER BY ps.status, o.department, o.level, o.name
     ");
+    
     $stmt->execute([$date]);
     return $stmt->fetchAll();
 }
@@ -256,27 +260,75 @@ function saveReport($pdo, $date, $summary) {
 }
 
 // Update officer attendance
-function updateAttendance($pdo, $officer_id, $date, $status, $remarks = '') {
+function updateAttendance($pdo, $officer_id, $date, $status, $remarks = '', $end_date = null) {
     $stmt = $pdo->prepare("
-        INSERT INTO parade_states (officer_id, parade_date, status, remarks)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO parade_states (officer_id, parade_date, status, remarks, end_date)
+        VALUES (?, ?, ?, ?, ?)
         ON DUPLICATE KEY UPDATE
         status = VALUES(status),
-        remarks = VALUES(remarks)
+        remarks = VALUES(remarks),
+        end_date = VALUES(end_date)
     ");
-    
-    return $stmt->execute([$officer_id, $date, $status, $remarks]);
+
+    return $stmt->execute([$officer_id, $date, $status, $remarks, $end_date]);
 }
 
 // Get all officers with their current attendance status
 function getAllOfficersWithStatus($pdo, $date) {
     $stmt = $pdo->prepare("
         SELECT o.id, o.name, o.rank, o.department, o.level, o.mess_location, o.gender,
-               COALESCE(ps.status, 'Present') as status, ps.remarks
+               COALESCE(ps.status, 'Present') as status, ps.remarks, ps.end_date
+        FROM officers o
+        LEFT JOIN parade_states ps ON o.id = ps.officer_id AND ps.parade_date = ?
+        ORDER BY o.department, o.level, o.name
+    ");
+    $stmt->execute([$date]);
+    $stmt->fetchAll();
+    // Automatically update status to 'Present' if current date > end_date and status is not 'Present'
+    $current_date = date('Y-m-d');
+    $stmt_update = $pdo->prepare("
+        UPDATE parade_states
+        SET status = 'Present', end_date = NULL
+        WHERE parade_date = ? AND end_date IS NOT NULL AND end_date < ? AND status != 'Present'
+    ");
+    $stmt_update->execute([$date, $current_date]);
+
+    // Fetch all officers with updated status
+    $stmt = $pdo->prepare("
+        SELECT o.id, o.name, o.rank, o.department, o.level, o.mess_location, o.gender,
+               COALESCE(ps.status, 'Present') as status, ps.remarks, ps.end_date
         FROM officers o
         LEFT JOIN parade_states ps ON o.id = ps.officer_id AND ps.parade_date = ?
         ORDER BY o.department, o.level, o.name
     ");
     $stmt->execute([$date]);
     return $stmt->fetchAll();
+}
+
+function getMirpurMessData($pdo, $date) {
+    // Count the officers in MIST Mirpur Mess
+    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM officers WHERE mess_location = ?");
+    $stmt->execute(['MIST Mirpur Mess']);
+    $Mirpur_mess['total'] = $stmt->fetch()['total'];
+    // Fetch all officers with updated status
+    $stmt = $pdo->prepare("
+        SELECT o.id, o.name, o.rank, o.department, o.level, o.mess_location, o.gender,
+               COALESCE(ps.status, 'Present') as status, ps.remarks, ps.end_date
+        FROM officers o
+        LEFT JOIN parade_states ps ON o.id = ps.officer_id AND ps.parade_date = ? AND o.mess_location = 'MIST Mirpur Mess'
+        WHERE o.mess_location = 'MIST Mirpur Mess'
+        ORDER BY o.department, o.level, o.name
+    ");
+    $stmt->execute([$date]);
+    $Mirpur_mess['officers'] = $stmt->fetchAll();
+    $stmt = $pdo->prepare("
+        SELECT COUNT(*) as on_parade
+        FROM officers o
+        LEFT JOIN parade_states ps ON o.id = ps.officer_id AND ps.parade_date = ? AND o.mess_location = 'MIST Mirpur Mess'
+        WHERE o.mess_location = 'MIST Mirpur Mess' AND COALESCE(ps.status, 'Present') = 'Present'
+    ");
+    $stmt->execute([$date]);
+    $Mirpur_mess['on_parade'] = $stmt->fetch()['on_parade'];
+    $Mirpur_mess['absent'] = $Mirpur_mess['total'] - $Mirpur_mess['on_parade'];
+    return $Mirpur_mess;
 }

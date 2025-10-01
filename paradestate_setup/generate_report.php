@@ -58,7 +58,7 @@ ob_start();
     <title>BAF Parade State Report - <?php echo $formatted_date; ?></title>
     <style>
         body {
-            font-family: 'DejaVu Sans', Arial, sans-serif;
+            font-family: Arial;
             margin: 0;
             padding: 15px;
             font-size: 11px;
@@ -69,17 +69,20 @@ ob_start();
         .header {
             text-align: center;
             font-weight: bold;
-            font-size: 16px;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #000;
+            font-size: 18px;
+            margin-bottom: 18px;
             padding-bottom: 10px;
+            width: fit-content ;
+            max-width: fit-content;
+            justify-self: center;
+
         }
         
         .report-table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 15px;
-            font-size: 10px;
+            font-size: 12px;
         }
         
         .report-table th,
@@ -91,37 +94,47 @@ ob_start();
         }
         
         .report-table th {
-            background-color: #be2424;
-            color: #ffffff;
+            background-color: yellow;
+            color: #000000ff;
             font-weight: bold;
-            font-size: 9px;
+            font-size: 12px;
+            padding-bottom: 5px;
         }
         
         .dept-header {
-            background-color: #c6d9f0;
             font-weight: bold;
             text-align: left;
             padding-left: 5px;
         }
-        
-        .dept-total {
-            background-color: #c6d9f0;
-            font-weight: bold;
+        .dept-header.CSE{
+            background-color: #c6d9f1;
         }
-        
-        .level-total {
+        .dept-header.ME{
+            background-color: yellowgreen;
+        }
+        .dept-header.AE{
             background-color: #ffffcc;
-            font-weight: bold;
         }
+        .dept-header.EECE{
+            background-color: #fabf8f;
+        }
+        .dept-ser {
+            background-color: #ffffffff;
+            font-weight: bold;
+            text-align: center;
+            padding-left: 5px;
+        }
+        
+       
         
         .grand-total {
             font-weight: bold;
-            background-color: #bebb24;
+            background-color:yellow;
         }
         
         .summary-section {
             margin-top: 15px;
-            font-size: 10px;
+            font-size: 12px;
         }
         
         .summary-item {
@@ -148,13 +161,17 @@ ob_start();
         .text-left {
             text-align: left;
         }
+        .highlight {
+            background-color: yellowgreen;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        PARADE STATE MIST STUDENT OFFRS (AIR FORCE) Dt: <?php echo $formatted_date; ?>
+        <strong style="background-color: aqua;text-decoration: underline;">PARADE STATE MIST STUDENT OFFRS (AIR FORCE)</strong> 
+         &nbsp;&nbsp;&nbsp;&nbsp;<strong style="background-color: yellow;">Dt: <?php echo $formatted_date; ?></strong>
     </div>
-
     <table class="report-table">
         <thead>
             <tr>
@@ -231,33 +248,33 @@ ob_start();
             ?>
             <tr>
                 <?php if($first_row): ?>
-                <td rowspan="<?php echo count($dept_levels); ?>" class="dept-header"><?php echo $ser_no; ?>.</td>
-                <td rowspan="<?php echo count($dept_levels); ?>" class="dept-header"><?php echo $dept; ?></td>
+                <td rowspan="<?php echo count($dept_levels); ?>" class="dept-ser"><?php echo $ser_no; ?>.</td>
+                <td rowspan="<?php echo count($dept_levels); ?>" class="dept-header <?php echo $dept; ?>"><?php echo $dept; ?></td>
                 <?php $first_row = false; endif; ?>
                 
-                <td><?php echo $level_data['level']; ?></td>
+                <td class="dept-header <?php echo $dept; ?>"><?php echo $level_data['level']; ?></td>
                 
                 <!-- MIST Dhaka Mess -->
-                <td><?php echo $level_data['dhaka']['total'] > 0 ? $level_data['dhaka']['total'] : '-'; ?></td>
-                <td><?php echo $level_data['dhaka']['present'] > 0 ? $level_data['dhaka']['present'] : '-'; ?></td>
-                <td><?php echo $level_data['dhaka']['absent'] > 0 ? $level_data['dhaka']['absent'] : '-'; ?></td>
-                
+                <td class="dept-header <?php echo $dept; ?>"><?php echo $level_data['dhaka']['total'] > 0 ? $level_data['dhaka']['total'] : '-'; ?></td>
+                <td class="dept-header <?php echo $dept; ?>"><?php echo $level_data['dhaka']['present'] > 0 ? $level_data['dhaka']['present'] : '-'; ?></td>
+                <td class="dept-header <?php echo $dept; ?>"><?php echo $level_data['dhaka']['absent'] > 0 ? $level_data['dhaka']['absent'] : '-'; ?></td>
+
                 <!-- MIST Mirpur Mess -->
-                <td><?php echo $level_data['mirpur']['total'] > 0 ? $level_data['mirpur']['total'] : '-'; ?></td>
-                <td><?php echo $level_data['mirpur']['present'] > 0 ? $level_data['mirpur']['present'] : '-'; ?></td>
-                <td><?php echo $level_data['mirpur']['absent'] > 0 ? $level_data['mirpur']['absent'] : '-'; ?></td>
-                
+                <td class="dept-header <?php echo $dept; ?>"><?php echo $level_data['mirpur']['total'] > 0 ? $level_data['mirpur']['total'] : '-'; ?></td>
+                <td class="dept-header <?php echo $dept; ?>"><?php echo $level_data['mirpur']['present'] > 0 ? $level_data['mirpur']['present'] : '-'; ?></td>
+                <td class="dept-header <?php echo $dept; ?>"><?php echo $level_data['mirpur']['absent'] > 0 ? $level_data['mirpur']['absent'] : '-'; ?></td>
+
                 <!-- BAF Base AKR -->
-                <td><?php echo $level_data['akr']['total'] > 0 ? $level_data['akr']['total'] : '-'; ?></td>
-                <td><?php echo $level_data['akr']['present'] > 0 ? $level_data['akr']['present'] : '-'; ?></td>
-                <td><?php echo $level_data['akr']['absent'] > 0 ? $level_data['akr']['absent'] : '-'; ?></td>
-                
+                <td class="dept-header <?php echo $dept; ?>"><?php echo $level_data['akr']['total'] > 0 ? $level_data['akr']['total'] : '-'; ?></td>
+                <td class="dept-header <?php echo $dept; ?>"><?php echo $level_data['akr']['present'] > 0 ? $level_data['akr']['present'] : '-'; ?></td>
+                <td class="dept-header <?php echo $dept; ?>"><?php echo $level_data['akr']['absent'] > 0 ? $level_data['akr']['absent'] : '-'; ?></td>
+
                 <!-- Level wise total -->
-                <td class="level-total"><?php echo $level_data['level_total']; ?></td>
+                <td class="dept-header <?php echo $dept; ?>"><?php echo $level_data['level_total']; ?></td>
                 
                 <!-- Department total (only on first row) -->
                 <?php if($level_data === $dept_levels[0]): ?>
-                <td rowspan="<?php echo count($dept_levels); ?>" class="dept-total"><?php echo $dept_total_str; ?></td>
+                <td rowspan="<?php echo count($dept_levels); ?>" class="dept-header <?php echo $dept; ?>"><?php echo $dept_total_str; ?></td>
                 <?php endif; ?>
             </tr>
             <?php 
@@ -288,7 +305,7 @@ ob_start();
     <!-- Summary Section -->
     <div class="summary-section">
         <div class="summary-item">
-            <strong>1. Grand Total:</strong> Dhaka Mess + MIST Mess + BAF Base AKR = 
+            1. <strong class="highlight">Grand Total:</strong> Dhaka Mess + MIST Mess + BAF Base AKR = 
             <?php echo $grand_totals['dhaka']['str']; ?> + 
             <?php echo $grand_totals['mirpur']['str']; ?> + 
             <?php echo $grand_totals['akr']['str']; ?> = 
@@ -296,7 +313,7 @@ ob_start();
         </div>
         
         <div class="summary-item">
-            <strong>2. Level wise Total Offrs:</strong> 
+            2. <strong class="highlight">Level wise Total Offrs:</strong> 
             <?php 
             $level_mapping = ['I' => '1', 'II' => '2', 'III' => '3', 'IV' => '4'];
             $level_parts = [];
@@ -315,7 +332,7 @@ ob_start();
         </div>
         
         <div class="summary-item">
-            <strong>3. Total On Parade:</strong> Dhaka Mess + MIST Mess + BAF Base AKR = 
+            3. <strong class="highlight">Total On Parade:</strong> Dhaka Mess + MIST Mess + BAF Base AKR = 
             <?php echo $grand_totals['dhaka']['present']; ?> + 
             <?php echo $grand_totals['mirpur']['present']; ?> + 
             <?php echo $grand_totals['akr']['present']; ?> = 
@@ -323,7 +340,7 @@ ob_start();
         </div>
         
         <div class="summary-item">
-            <strong>4. Total Female Offrs:</strong> 
+            4. <strong class="highlight">Total Female Offrs:</strong> 
             <?php if(!empty($summary['female_by_location']) && $summary['total_female'] > 0): ?>
                 (<?php 
                 $female_parts = [];
@@ -345,32 +362,57 @@ ob_start();
             <?php endif; ?>
         </div>
         
-        <div class="section-title">5. Details of Absent/Off-parade:</div>
+        <div class="section-title">5. <strong class="highlight">Details of Absent/Off-parade:</strong></div>
         
         <div class="text-left absent-details">
-            <strong>a. MIST Mirpur Mess:</strong>
+            <strong style="background-color: aqua;">a. MIST Mirpur Mess:</strong><br><br>
             <?php if(!empty($absent_officers)): ?>
             <ol>
                 <?php 
-                $mirpur_count = 0;
                 foreach($absent_officers as $officer): 
-                    if($officer['mess_location'] == 'MIST Mirpur Mess' && $mirpur_count < 10): 
+                    if($officer['mess_location'] == 'MIST Mirpur Mess'): 
                 ?>
-                <li><?php echo $officer['rank'] . ' ' . $officer['name'] . '- ' . $officer['department'] . ', L' . str_replace(['I', 'II', 'III', 'IV'], ['1', '2', '3', '4'], $officer['level']) . ' , ' . $officer['short_status']; ?></li>
+                <li><?php echo $officer['rank'] . ' ' . $officer['name'] . '- ' . $officer['department'] . ', L -' . str_replace([ 'III', 'II','IV'], ['3', '2', '4'], $officer['level']) . ' , ' . $officer['short_status']; ?></li>
                 <?php 
-                    $mirpur_count++;
                     endif;
                 endforeach; 
                 ?>
             </ol>
             <?php endif; ?>
-            
-            <strong>b. MIST Dhaka Mess:</strong><br><br>
-            
-            <strong>c. BAF Base AKR:</strong>
+            <br>
+            <strong  style="background-color: aqua;">b. MIST Dhaka Mess:</strong><br>
+            <?php if(!empty($absent_officers)): ?>
+            <ol>
+                <?php 
+                foreach($absent_officers as $officer): 
+                    if($officer['mess_location'] == 'MIST Dhaka Mess'): 
+                ?>
+                <li><?php echo $officer['rank'] . ' ' . $officer['name'] . '- ' . $officer['department'] . ', L -' . str_replace([ 'III', 'II','IV'], ['3', '2', '4'], $officer['level']) . ' , ' . $officer['short_status']; ?></li>
+                <?php 
+                    endif;
+                endforeach; 
+                ?>
+            </ol>
+            <?php endif; ?>
+                <br>
+            <strong style="background-color: aqua;">c. BAF Base AKR:</strong><br>
+                <?php if(!empty($absent_officers)): ?>
+            <ol>
+                <?php 
+                foreach($absent_officers as $officer): 
+                    if($officer['mess_location'] == 'BAF Base AKR'): 
+                ?>
+                <li><?php echo $officer['rank'] . ' ' . $officer['name'] . '- ' . $officer['department'] . ', L -' . str_replace([ 'III', 'II','IV'], ['3', '2', '4'], $officer['level']) . ' , ' . $officer['short_status']; ?></li>
+                <?php
+                    endif;
+                endforeach; 
+                ?>
+            </ol>
+            <?php endif; ?>
+            <br>
         </div>
         
-        <div class="section-title">7. Summary of Absents/Off-parade: <?php echo str_pad($summary['total_absent'], 2, '0', STR_PAD_LEFT); ?></div>
+        <div class="section-title">7. <strong class="highlight">Summary of Absents/Off-parade:</strong> <?php echo str_pad($summary['total_absent'], 2, '0', STR_PAD_LEFT); ?></div>
         <div class="text-left">
             <?php if(!empty($summary['absent_breakdown'])): ?>
                 <?php 
@@ -399,8 +441,8 @@ ob_start();
                 <div><strong>e. Isolation:</strong></div>
             <?php endif; ?>
         </div>
-        
-        <div class="section-title">8. Maj Changes/ Note:</div>
+
+        <div class="section-title">8. <strong class="highlight">Maj Changes/ Note:</strong></div>
         <div style="height: 20px;"></div>
     </div>
 </body>
@@ -422,14 +464,14 @@ if ($format === 'html') {
             'mode' => 'utf-8',
             'format' => 'A4-L',  // A4 Landscape
             'orientation' => 'L',
-            'margin_left' => 8,
-            'margin_right' => 8,
-            'margin_top' => 8,
-            'margin_bottom' => 8,
+            'margin_left' => 14,
+            'margin_right' => 10,
+            'margin_top' => 12,
+            'margin_bottom' => 12,
             'margin_header' => 0,
             'margin_footer' => 0,
             'default_font_size' => 10,
-            'default_font' => 'dejavusans'
+            'default_font' => 'Arial'
         ]);
         
         // Set document information
@@ -441,7 +483,7 @@ if ($format === 'html') {
         $mpdf->WriteHTML($html);
         
         // Set output filename
-        $filename = "BAF_Parade_Report_{$formatted_date}.pdf";
+        $filename = "Details_Okay_Report(BAF)_{$formatted_date}.pdf";
         
         // Output PDF (I = inline display in browser, D = download)
         $mpdf->Output($filename, 'I');

@@ -12,7 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_attendance'])) 
         foreach ($_POST['officers'] as $officer_id => $data) {
             $status = $data['status'];
             $remarks = $data['remarks'] ?? '';
-            updateAttendance($pdo, $officer_id, $current_date, $status, $remarks);
+            $end_date = ($status != 'Present' && !empty($data['end_date'])) ? $data['end_date'] : null;
+
+            if ($status != 'Present' && empty($data['end_date'])) {
+                throw new Exception("End date is required when status is not Present for officer ID: " . $officer_id);
+            }
+
+            updateAttendance($pdo, $officer_id, $current_date, $status, $remarks, $end_date);
         }
         $message = '<div class="alert alert-success"><i class="fas fa-check"></i> Attendance updated successfully!</div>';
     } catch (Exception $e) {
@@ -88,6 +94,10 @@ $officers = getAllOfficersWithStatus($pdo, $current_date);
                     <a href="generate_report.php?date=<?php echo $current_date; ?>" class="btn btn-light" target="_blank">
                         <i class="fas fa-file-pdf"></i> Generate Report
                     </a>
+                    
+                    <a href="minstate.php?date=<?php echo date('Y-m-d'); ?>" class="btn btn-light" target="_blank">
+                        <i class="fas fa-file-pdf"></i> Today's Mini Report
+                    </a>
                 </div>
             </div>
         </div>
@@ -144,6 +154,7 @@ $officers = getAllOfficersWithStatus($pdo, $current_date);
                                     <th>Mess Location</th>
                                     <th>Gender</th>
                                     <th>Status</th>
+                                    <th>End Date</th>
                                     <th>Remarks</th>
                                 </tr>
                             </thead>
@@ -155,7 +166,7 @@ $officers = getAllOfficersWithStatus($pdo, $current_date);
                                         $current_dept = $officer['department'];
                                 ?>
                                 <tr class="dept-group">
-                                    <td colspan="9" class="text-center">
+                                    <td colspan="10" class="text-center">
                                         <strong><?php echo $current_dept; ?> Department</strong>
                                     </td>
                                 </tr>
@@ -181,6 +192,31 @@ $officers = getAllOfficersWithStatus($pdo, $current_date);
                                             <option value="Isolation" <?php echo $officer['status'] == 'Isolation' ? 'selected' : ''; ?>>Isolation</option>
                                         </select>
                                     </td>
+                                    <td>
+                                        <input type="date" name="officers[<?php echo $officer['id']; ?>][end_date]" 
+                                               class="form-control form-control-sm end-date-input" 
+                                               value="<?php echo htmlspecialchars($officer['end_date'] ?? ''); ?>" 
+                                               placeholder="<?php echo htmlspecialchars($officer['end_date'] ?? ''); ?>"
+                                               <?php echo ($officer['status'] == 'Present') ? 'disabled' : ''; ?>>
+                                    </td>
+                                    <script>
+                                        // Ensure end date is disabled if status is Present on page load
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            document.querySelectorAll('tr.officer-row').forEach(function(row) {
+                                                const statusSelect = row.querySelector('.status-select');
+                                                const endDateInput = row.querySelector('.end-date-input');
+                                                if (statusSelect && endDateInput) {
+                                                    endDateInput.disabled = (statusSelect.value === 'Present');
+                                                    statusSelect.addEventListener('change', function() {
+                                                        endDateInput.disabled = (this.value === 'Present');
+                                                        if (this.value === 'Present') {
+                                                            endDateInput.value = '';
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        });
+                                    </script>
                                     <td>
                                         <input type="text" name="officers[<?php echo $officer['id']; ?>][remarks]" 
                                                class="form-control form-control-sm" 

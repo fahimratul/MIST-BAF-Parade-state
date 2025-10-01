@@ -41,6 +41,7 @@ $trends = $stmt->fetchAll();
     <title>Reports Dashboard - BAF System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .reports-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -71,11 +72,12 @@ $trends = $stmt->fetchAll();
             background-color: #f8f9fa;
         }
         .trend-chart {
-            height: 300px;
+            height: 400px;
             border: 1px solid #dee2e6;
             border-radius: 5px;
             padding: 20px;
-            background: #f8f9fa;
+            background: white;
+            position: relative;
         }
     </style>
 </head>
@@ -217,12 +219,8 @@ $trends = $stmt->fetchAll();
                         <h5><i class="fas fa-chart-line"></i> Attendance Trend (Last 30 Days)</h5>
                     </div>
                     <div class="card-body">
-                        <div class="trend-chart d-flex align-items-center justify-content-center">
-                            <div class="text-center">
-                                <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
-                                <p class="text-muted">Chart visualization would be implemented here using Chart.js or similar library</p>
-                                <p><small>Data points: <?php echo count($trends); ?> days</small></p>
-                            </div>
+                        <div class="trend-chart">
+                            <canvas id="attendanceChart" width="400" height="100"></canvas>
                         </div>
                     </div>
                 </div>
@@ -323,6 +321,83 @@ $trends = $stmt->fetchAll();
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <?php if (!empty($trends)): ?>
+    <script>
+        // Prepare data for Chart.js
+        const chartData = {
+            labels: <?php echo json_encode(array_map(function($trend) { return date('M d', strtotime($trend['report_date'])); }, $trends)); ?>,
+            datasets: [
+                {
+                    label: 'On Parade',
+                    data: <?php echo json_encode(array_column($trends, 'total_on_parade')); ?>,
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1,
+                    fill: false
+                },
+                {
+                    label: 'Absent',
+                    data: <?php echo json_encode(array_column($trends, 'total_absent')); ?>,
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    tension: 0.1,
+                    fill: false
+                }
+            ]
+        };
+
+        // Chart configuration
+        const config = {
+            type: 'line',
+            data: chartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Attendance Trend - Last 30 Days'
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Officers'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                elements: {
+                    point: {
+                        radius: 4,
+                        hoverRadius: 6
+                    }
+                }
+            }
+        };
+
+        // Create the chart
+        const ctx = document.getElementById('attendanceChart').getContext('2d');
+        const attendanceChart = new Chart(ctx, config);
+    </script>
+    <?php endif; ?>
+    
     <script>
         function generateReport() {
             const date = document.getElementById('reportDate').value;

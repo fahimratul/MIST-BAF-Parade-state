@@ -63,6 +63,7 @@ $today_parade_data = getParadeData($pdo, $current_date);
                 <a class="nav-link" href="officers.php">Officers</a>
                 <a class="nav-link" href="parade.php">Parade State</a>
                 <a class="nav-link" href="reports.php">Reports</a>
+                <a class="nav-link" style="color:red;" href="downloaddatabase.php">Backup</a>
             </div>
         </div>
     </nav>
@@ -126,6 +127,10 @@ $today_parade_data = getParadeData($pdo, $current_date);
                         </a>
                         <a href="generate_report.php?date=<?php echo $current_date; ?>" class="btn btn-custom" target="_blank">
                             <i class="fas fa-file-pdf"></i> Generate Today's Report
+                        </a>
+                        
+                        <a href="minstate.php?date=<?php echo date('Y-m-d'); ?>" class="btn btn-custom" target="_blank">
+                            <i class="fas fa-file-pdf"></i> Today's Mini Report
                         </a>
                         <a href="reports.php" class="btn btn-custom">
                             <i class="fas fa-chart-bar"></i> View All Reports
