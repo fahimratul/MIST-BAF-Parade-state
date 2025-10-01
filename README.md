@@ -98,20 +98,22 @@ You should see the **Dashboard** with:
 #### 2. Test Each Module
 
 **a) Dashboard Test:**
+URL:
 ```
-URL: http://localhost/paradestate/index.php
+ http://localhost/paradestate/index.php
+```
 Expected: Statistics, department breakdown, recent activity
-```
+
 
 **b) Officers Management:**
+URL:
 ```
-URL: http://localhost/paradestate/officers.php
+ http://localhost/paradestate/officers.php
+```
 Expected: List of sample officers with search/filter options
-```
 
 **c) Add New Officer:**
-```
-URL: http://localhost/paradestate/add_officer.php
+URL: ``` http://localhost/paradestate/add_officer.php ```
 Try adding:
 - Name: Test Officer
 - Rank: Flg Offr
@@ -121,7 +123,7 @@ Try adding:
 - Gender: Male
 Click "Add Officer"
 Expected: Success message
-```
+
 
 **d) Parade State Management:**
 ```
