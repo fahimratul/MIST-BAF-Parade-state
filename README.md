@@ -13,9 +13,7 @@ A comprehensive web-based system for managing Bangladesh Air Force MIST Student 
   - [Step 1: Install XAMPP](#step-1-install-xampp)
   - [Step 2: Download Project Files](#step-2-download-project-files)
   - [Step 3: Setup Database](#step-3-setup-database)
-  - [Step 4: Configure the System](#step-4-configure-the-system)
-  - [Step 5: Install mPDF for PDF Generation](#step-5-install-mPDF-for-pdf-generation)
-  - [Step 6: Test the Installation](#step-6-test-the-installation)
+  - [Step 4: Test the Installation](#step-4-test-the-installation)
 - [Usage Guide](#usage-guide)
 - [Troubleshooting](#troubleshooting)
 - [Features](#features)
@@ -74,12 +72,13 @@ A comprehensive web-based system for managing Bangladesh Air Force MIST Student 
    - You should see the XAMPP welcome page
 
 ### Step 3: Setup Database
+   - Run the **Paradestate-Copier.exe** 
+   - It will setup your HD file
+   - After this run **BAF-Parade-Setup.exe**
+   - It will setup your database. Now your database is ready to run 
 
-### Step 4: Configure the System
 
-
-
-### Step 6: Test the Installation
+### Step 4: Test the Installation
 
 #### 1. Access the System
 
@@ -113,7 +112,10 @@ URL:
 Expected: List of sample officers with search/filter options
 
 **c) Add New Officer:**
-URL: ``` http://localhost/paradestate/add_officer.php ```
+URL: 
+```
+ http://localhost/paradestate/add_officer.php 
+```
 Try adding:
 - Name: Test Officer
 - Rank: Flg Offr
@@ -126,28 +128,32 @@ Expected: Success message
 
 
 **d) Parade State Management:**
+URL: 
 ```
-URL: http://localhost/paradestate/parade.php
+http://localhost/paradestate/parade.php
+```
 Expected: List of all officers with attendance status dropdowns
 Try:
 - Mark a few officers as "Leave" or "CMH"
 - Add remarks
 - Click "Update Attendance"
 Expected: Success message
-```
 
 **e) Generate PDF Report:**
+URL: 
 ```
-URL: http://localhost/paradestate/generate_report.php?date=2025-01-15
+http://localhost/paradestate/generate_report.php?date=2025-01-15
+```
 Expected: PDF report opens in browser
 Should show: Complete parade state report in BAF format
-```
+
 
 **f) Reports Dashboard:**
+URL:
 ```
-URL: http://localhost/paradestate/reports.php
+ http://localhost/paradestate/reports.php
+```
 Expected: List of generated reports with statistics
-```
 
 ---
 
@@ -156,7 +162,7 @@ Expected: List of generated reports with statistics
 ### Daily Operations
 
 #### 1. Mark Daily Attendance
-```
+
 1. Go to: Parade State Management
 2. Select today's date
 3. Mark attendance for each officer:
@@ -168,18 +174,14 @@ Expected: List of generated reports with statistics
    - Isolation
 4. Add remarks if needed
 5. Click "Update Attendance"
-```
 
 #### 2. Generate Daily Report
-```
 1. Go to: Reports Dashboard
 2. Select date
 3. Click "Generate PDF Report"
 4. Print or save PDF
-```
 
 #### 3. Add New Officers
-```
 1. Go to: Officers Management
 2. Click "Add New Officer"
 3. Fill in details:
@@ -190,10 +192,9 @@ Expected: List of generated reports with statistics
    - Mess Location
    - Gender
 4. Click "Add Officer"
-```
 
 #### 4. View Statistics
-```
+
 1. Dashboard shows:
    - Total officers
    - Present today
@@ -201,7 +202,7 @@ Expected: List of generated reports with statistics
    - Female officers
 2. Department breakdowns
 3. Recent activity
-```
+
 
 ---
 
@@ -212,34 +213,37 @@ Expected: List of generated reports with statistics
 #### Issue 1: "Cannot connect to database"
 
 **Solution:**
-```
+
 1. Check if MySQL is running in XAMPP Control Panel
 2. Verify config.php has correct credentials:
    - $host = 'localhost';
    - $username = 'root';
    - $password = '';  (empty by default)
 3. Test database connection:
-   - Visit: http://localhost/phpmyadmin
+   - Visit: 
+   ```
+   http://localhost/phpmyadmin
+   ```
    - Check if "baf_parade_system" database exists
-```
+
 
 #### Issue 2: "Page not found" or "404 Error"
 
 **Solution:**
-```
 1. Verify XAMPP Apache is running (green in Control Panel)
 2. Check folder location:
    - Should be: C:\xampp\htdocs\paradestate\
    - NOT: C:\xampp\htdocs\baf-parade-system-main\
 3. Use correct URL: http://localhost/paradestate (not .com)
-```
 
 #### Issue 3: "Failed to load PDF document"
 
 **Solution:**
-```
 1. Install mPDF:
-   - Visit: http://localhost/paradestate/install_composer.php
+   - Visit: 
+   ```
+   http://localhost/paradestate/install_composer.php
+   ```
    - Click install button
    - Wait for completion
 
@@ -247,22 +251,17 @@ Expected: List of generated reports with statistics
    - Check folder: paradestate/vendor/
    - Should contain: mPDF.php file
 
-```
-
 
 #### Issue 4: "Access Denied" or Permission Issues
 
-**Windows:**
-```
 - Right-click folder: C:\xampp\htdocs\
 - Properties → Security tab
 - Make sure your user has "Full control"
-```
+
 
 #### Issue 5: "Blank white page"
-```
+
 **Solution:**
-```
 1. Enable error reporting:
    - Edit: C:\xampp\htdocs\baf_parade_system\index.php
    - Add at the very top:
@@ -278,12 +277,10 @@ Expected: List of generated reports with statistics
 3. Verify PHP version:
    - Visit: http://localhost/dashboard/
    - Check PHP version (should be 7.4+)
-```
 
 #### Issue 6: "Table doesn't exist"
 
 **Solution:**
-```
 1. Re-import database:
    - Open phpMyAdmin: http://localhost/phpmyadmin
    - Select "baf_parade_system" database
@@ -293,12 +290,10 @@ Expected: List of generated reports with statistics
 
 2. Verify tables exist:
    - Should see: officers, parade_states, reports
-```
 
 #### Issue 7: Slow Performance
 
 **Solution:**
-```
 1. Increase PHP memory limit:
    - Edit: C:\xampp\php\php.ini (Windows)
    - Find: memory_limit = 128M
@@ -307,7 +302,6 @@ Expected: List of generated reports with statistics
 
 2. Close unnecessary applications
 3. Clear browser cache (Ctrl+Shift+Delete)
-```
 
 ---
 
@@ -349,14 +343,12 @@ Expected: List of generated reports with statistics
 
 3. **System Information:**
    When reporting issues, include:
-   ```
    - Operating System: Windows/macOS/Linux
    - XAMPP Version: (check Control Panel)
    - PHP Version: (visit http://localhost/dashboard/)
    - Error Messages: (exact text)
    - Steps to Reproduce: (what you did)
    - Screenshots: (if applicable)
-   ```
 
 ---
 
@@ -365,29 +357,21 @@ Expected: List of generated reports with statistics
 ### To update to a newer version:
 
 1. **Backup Current Installation:**
-   ```
    - Export database via phpMyAdmin
    - Copy paradestate folder to safe location
-   ```
 
 2. **Download New Version:**
-   ```
    - Download latest ZIP from GitHub
    - Extract to temporary location
-   ```
 
 3. **Replace Files:**
-   ```
    - Keep your config.php (don't overwrite)
    - Replace all other PHP files
    - Keep vendor/ folder if already installed
-   ```
 
 4. **Update Database:**
-   ```
    - Check if new database_schema.sql includes updates
    - Import only new tables/columns if needed
-   ```
 
 ---
 
@@ -445,7 +429,6 @@ This system is developed for Bangladesh Air Force use. All rights reserved.
 ## 📌 Quick Reference Card
 
 ### Essential URLs:
-```
 Dashboard:          http://localhost/paradestate/
 Officers:           http://localhost/paradestate/officers.php
 Add Officer:        http://localhost/paradestate/add_officer.php
@@ -454,25 +437,20 @@ Reports:            http://localhost/paradestate/reports.php
 Generate PDF:       http://localhost/paradestate/generate_report.php
 Install mPDF:      http://localhost/paradestate/install_composer.php
 phpMyAdmin:         http://localhost/phpmyadmin
-```
 
 ### XAMPP Control:
-```
 Start Apache:       Click "Start" next to Apache
 Start MySQL:        Click "Start" next to MySQL
 Stop Services:      Click "Stop" buttons
 View Logs:          Click "Logs" buttons
 Config Files:       Click "Config" buttons
-```
+
 
 ### File Locations:
-```
 Windows:
 - Project: C:\xampp\htdocs\paradestate\
 - Config: C:\xampp\php\php.ini
 - Logs: C:\xampp\apache\logs\
-
-```
 
 ---
 
