@@ -429,21 +429,21 @@ This system is developed for Bangladesh Air Force use. All rights reserved.
 ## 📌 Quick Reference Card
 
 ### Essential URLs:
-Dashboard:          http://localhost/paradestate/
-Officers:           http://localhost/paradestate/officers.php
-Add Officer:        http://localhost/paradestate/add_officer.php
-Parade State:       http://localhost/paradestate/parade.php
-Reports:            http://localhost/paradestate/reports.php
-Generate PDF:       http://localhost/paradestate/generate_report.php
-Install mPDF:      http://localhost/paradestate/install_composer.php
-phpMyAdmin:         http://localhost/phpmyadmin
+   - Dashboard:          http://localhost/paradestate/
+   - Officers:           http://localhost/paradestate/officers.php
+   - Add Officer:        http://localhost/paradestate/add_officer.php
+   - Parade State:       http://localhost/paradestate/parade.php
+   - Reports:            http://localhost/paradestate/reports.php
+   - Generate PDF:       http://localhost/paradestate/generate_report.php
+   - Install mPDF:      http://localhost/paradestate/install_composer.php
+   - phpMyAdmin:         http://localhost/phpmyadmin
 
 ### XAMPP Control:
-Start Apache:       Click "Start" next to Apache
-Start MySQL:        Click "Start" next to MySQL
-Stop Services:      Click "Stop" buttons
-View Logs:          Click "Logs" buttons
-Config Files:       Click "Config" buttons
+- Start Apache:       Click "Start" next to Apache
+- Start MySQL:        Click "Start" next to MySQL
+- Stop Services:      Click "Stop" buttons
+- View Logs:          Click "Logs" buttons
+- Config Files:       Click "Config" buttons
 
 
 ### File Locations:
